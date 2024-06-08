@@ -7,32 +7,35 @@ app.use(cookieParser())
 app.use(express.urlencoded());
 app.post('/proxy', function(req, res) {
     try {
-        request.post('https://www.croxyproxy.com/servers', {
-            "headers": {
-              "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-              "accept-language": "en-US,en;q=0.9",
-              "cache-control": "no-cache",
-              "content-type": "application/x-www-form-urlencoded",
-              "pragma": "no-cache",
-              "priority": "u=0, i",
-              "sec-ch-ua": "\"Google Chrome\";v=\"125\", \"Chromium\";v=\"125\", \"Not.A/Brand\";v=\"24\"",
-              "sec-ch-ua-mobile": "?0",
-              "sec-ch-ua-platform": "\"Windows\"",
-              "sec-fetch-dest": "document",
-              "sec-fetch-mode": "navigate",
-              "sec-fetch-site": "same-origin",
-              "sec-fetch-user": "?1",
-              "upgrade-insecure-requests": "1",
-              "cookie": "__cpu=1695166956.1908159277",
-              "Referer": "https://www.croxyproxy.com/",
-              "Referrer-Policy": "strict-origin-when-cross-origin"
-            },
-            "body": "url=" + encodeURIComponent(req.body.url) + "&csrf=RXFOUlV0ZjFxdHg5L1VGd1ZrazRKUmxldmpjdGNpSUhXTmg0R2c4K1l6dXNka3NiR2p4NjUrMnU4UU1nQ0JkNUFEelk5TnVmOFZNMVRlYzFpUVlod0pxQXFvRE13SUsySGhKdmtPb2tWeWM9",
-            "method": "POST"
-          }, function(err, res2, body) {
-            res.cookie('website', req.body.url)
-            res.status(200).send(body)
-          })
+        request.get('https://www.croxyproxy.com', {
+        }, function(err, res3, body) {
+            var csrf = body.split('<input name="csrf" type="hidden" value="')[1].split('"')[0]
+            request.post('https://www.croxyproxy.com/servers', {
+                "headers": {
+                "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+                "accept-language": "en-US,en;q=0.9",
+                "cache-control": "no-cache",
+                "content-type": "application/x-www-form-urlencoded",
+                "pragma": "no-cache",
+                "priority": "u=0, i",
+                "sec-ch-ua": "\"Google Chrome\";v=\"125\", \"Chromium\";v=\"125\", \"Not.A/Brand\";v=\"24\"",
+                "sec-ch-ua-mobile": "?0",
+                "sec-ch-ua-platform": "\"Windows\"",
+                "sec-fetch-dest": "document",
+                "sec-fetch-mode": "navigate",
+                "sec-fetch-site": "same-origin",
+                "sec-fetch-user": "?1",
+                "upgrade-insecure-requests": "1",
+                "Referer": "https://www.croxyproxy.com/",
+                "Referrer-Policy": "strict-origin-when-cross-origin"
+                },
+                "body": "url=" + encodeURIComponent(req.body.url) + "&csrf=" + csrf,
+                "method": "POST"
+            }, function(err, res2, body) {
+                res.cookie('website', req.body.url)
+                res.status(200).send(body)
+            })
+        })
     } catch(e) {
         res.status(500).send('error')
     }
@@ -66,7 +69,6 @@ app.post('/requests', function(req,res) {
               "sec-fetch-site": "same-origin",
               "sec-fetch-user": "?1",
               "upgrade-insecure-requests": "1",
-              "cookie": "__cpu=1695166956.1908159277",
               "Referer": "https://www.croxyproxy.com/",
               "Referrer-Policy": "strict-origin-when-cross-origin"
             },
